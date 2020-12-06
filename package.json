@@ -1,7 +1,8 @@
 {
-  "name": "homework-manager",
+  "name": "rick-manager",
   "version": "0.1.0",
   "private": true,
+  "license": "GPL-3.0-or-later",
   "dependencies": {
     "@chakra-ui/icons": "^1.0.1",
     "@chakra-ui/react": "^1.0.0",
