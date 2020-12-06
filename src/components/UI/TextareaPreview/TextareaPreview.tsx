@@ -23,7 +23,7 @@ const TextareaPreview: React.FC<TextareaPreviewProps> = React.forwardRef(
         Math.max(ref.current.scrollHeight, MIN_HEIGHT) + 8 + "px";
     };
     return (
-      <HStack spacing={4} align="top">
+      <HStack spacing={4} align="top" mb={4}>
         <Box flex="1">
           <Textarea
             placeholder="Comienza a escribir"

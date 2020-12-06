@@ -1,10 +1,16 @@
 import { ColorModeScript } from "@chakra-ui/react";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom";
+import es from "date-fns/locale/es";
+import { registerLocale } from "react-datepicker";
 import { App } from "./App";
 import reportWebVitals from "./reportWebVitals";
 import * as serviceWorker from "./serviceWorker";
 import "./styles/table.css";
+import "react-datepicker/dist/react-datepicker.css";
+import "./styles/date-picker.css";
+
+registerLocale("es", es);
 
 ReactDOM.render(
   <StrictMode>
