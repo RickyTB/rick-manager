@@ -7,6 +7,7 @@ import {
   ButtonGroup,
   IconButton,
   Icon,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { BsCalendarFill, BsListTask } from "react-icons/bs";
@@ -24,18 +25,24 @@ const Toolbar: FC<ToolbarProps> = ({
   onChangeViewMode,
   onAddNote,
 }) => {
+  const bg = useColorModeValue("primary.500", "primary.300");
+  const color = useColorModeValue("white", "gray.800");
   return (
     <Flex
       as="nav"
       p={2}
       justify="space-between"
-      bgColor="tomato"
-      position="sticky"
+      bg={bg}
+      color={color}
+      position="fixed"
       top="0"
+      left="0"
+      right="0"
       zIndex="1"
+      boxShadow="sm"
     >
       <Box>
-        <ButtonGroup isAttached variant="solid">
+        <ButtonGroup isAttached variant="solid" colorScheme="accent">
           <IconButton
             isActive={viewMode === ViewMode.Calendar}
             aria-label="Show calendar"
@@ -55,7 +62,7 @@ const Toolbar: FC<ToolbarProps> = ({
       </Box>
       <Box>
         <ColorModeSwitcher mr="2" />
-        <Button leftIcon={<AddIcon />} colorScheme="blue" onClick={onAddNote}>
+        <Button leftIcon={<AddIcon />} colorScheme="accent" onClick={onAddNote}>
           Tarea
         </Button>
       </Box>
