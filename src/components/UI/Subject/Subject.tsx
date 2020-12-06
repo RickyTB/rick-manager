@@ -4,42 +4,40 @@ import React, { FC } from "react";
 interface SubjectProps {
   name: string;
   color: string;
-  count: number;
+  count?: number;
   isActive?: boolean;
+  onClick: () => void;
 }
 
 const Subject: FC<SubjectProps> = ({
   name,
   color,
-  count,
+  count = 0,
   isActive = false,
-}) => {
-  const handleClick = (e: any) => {
-    e.preventDefault();
-  };
-
-  return (
-    <Button
-      py={3}
-      borderBottomWidth="1px"
-      bg="white"
-      borderLeft={`8px solid ${color}`}
-      borderRadius="none"
-      as="button"
-      display="block"
-      w="100%"
-      onClick={handleClick}
-      textAlign="left"
-      _hover={{
-        bg: "gray.50",
-      }}
-      _active={{
-        bg: "gray.100",
-      }}
-      isActive={isActive}
-    >
-      <Heading fontSize="lg" px={2}>
-        {name}
+  onClick,
+}) => (
+  <Button
+    py={3}
+    borderBottomWidth="1px"
+    bg="white"
+    borderLeft={`8px solid ${color}`}
+    borderRadius="none"
+    as="button"
+    display="block"
+    w="100%"
+    onClick={onClick}
+    textAlign="left"
+    _hover={{
+      bg: "gray.50",
+    }}
+    _active={{
+      bg: "gray.100",
+    }}
+    isActive={isActive}
+  >
+    <Heading fontSize="lg" px={2}>
+      {name}
+      {count > 0 && (
         <Badge
           colorScheme="accent"
           ml="1"
@@ -50,9 +48,9 @@ const Subject: FC<SubjectProps> = ({
         >
           {count}
         </Badge>
-      </Heading>
-    </Button>
-  );
-};
+      )}
+    </Heading>
+  </Button>
+);
 
 export default Subject;
