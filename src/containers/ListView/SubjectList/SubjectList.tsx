@@ -7,13 +7,11 @@ import {
   IconButton,
   useColorModeValue,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
-import { Subject } from "../../../components/UI";
-import { AddSubject } from "../../../components/UI";
-import { ISubject } from "../../../db/models";
-import db from "../../../db";
-import { useDB } from "../../../hooks";
-import { TransactionState } from "../../../hooks/use-db";
+import { Subject, AddSubject } from "../../../components/UI";
+import db, { ISubject } from "../../../db";
+import { useDB, TransactionState, useErrorEffect } from "../../../hooks";
 
 interface SubjectListProps {
   selectedId?: number;
@@ -26,6 +24,7 @@ const SubjectList: FC<SubjectListProps> = ({ selectedId, onSelect }) => {
   const { isOpen, onToggle, onClose } = useDisclosure();
   const bg = useColorModeValue("primary.200", "primary.500");
   const color = useColorModeValue("gray.800", "white");
+  const toast = useToast();
   const [dbState, error] = useDB(
     async (db) => {
       const subjects = await db.subjects.orderBy("id").toArray();
@@ -34,6 +33,15 @@ const SubjectList: FC<SubjectListProps> = ({ selectedId, onSelect }) => {
     [db.subjects],
     [reload]
   );
+  useErrorEffect(() => {
+    toast({
+      title: "Ocurrió un error.",
+      description: error?.message,
+      status: "error",
+      duration: 5000,
+      isClosable: true,
+    });
+  }, error);
   const handleReloadClick = () => setReload((r) => !r);
   const handleAddSubject = async (subject: ISubject) => {
     await db.transaction("rw", db.subjects, async () => {
