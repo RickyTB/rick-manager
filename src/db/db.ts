@@ -1,9 +1,10 @@
 import Dexie from "dexie";
 import { ISubject } from "./models";
+import { ITask } from './models/task';
 
 export class RickManagerDatabase extends Dexie {
   subjects: Dexie.Table<ISubject, number>;
-  //emails: Dexie.Table<IEmailAddress, number>;
+  tasks: Dexie.Table<ITask, number>;
   //phones: Dexie.Table<IPhoneNumber, number>;
 
   constructor() {
@@ -13,15 +14,15 @@ export class RickManagerDatabase extends Dexie {
     // Define tables and indexes
     // (Here's where the implicit table props are dynamically created)
     //
-    this.version(1).stores({
+    this.version(2).stores({
       subjects: "++id, name",
-      //emails: '++id, contactId, type, email',
+      tasks: '++id, subjectId, dueDate',
       //phones: '++id, contactId, type, phone',
     });
 
     // The following lines are needed for it to work across typescipt using babel-preset-typescript:
     this.subjects = this.table("subjects");
-    //this.emails = this.table("emails");
+    this.tasks = this.table("tasks");
     //this.phones = this.table("phones");
   }
 }

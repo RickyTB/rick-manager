@@ -8,15 +8,24 @@ import { AddTask } from "../UI";
 import { useDisclosure } from "@chakra-ui/react";
 
 const loadViewMode = (): ViewMode =>
-  (localStorage.getItem(VIEW_MODE_LS_KEY) as ViewMode) || ViewMode.Calendar;
+  (localStorage.getItem(VIEW_MODE_LS_KEY) as ViewMode) || ViewMode.List;
 
 const Layout = () => {
   const [viewMode, setViewMode] = useState<ViewMode>(loadViewMode);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [resetting, setResetting] = useState(false);
 
   useUpdateEffect(() => {
     localStorage.setItem(VIEW_MODE_LS_KEY, viewMode);
   }, [viewMode]);
+
+  const handleTaskAdded = () => {
+    onClose();
+    setResetting(true);
+    setTimeout(() => {
+      setResetting(false);
+    }, 100);
+  };
 
   return (
     <>
@@ -25,9 +34,13 @@ const Layout = () => {
         onAddNote={onOpen}
         onChangeViewMode={setViewMode}
       />
-      {viewMode === ViewMode.Calendar && <CalendarView />}
-      {viewMode === ViewMode.List && <ListView />}
-      <AddTask isOpen={isOpen} onClose={onClose} />
+      {!resetting && viewMode === ViewMode.Calendar && <CalendarView />}
+      {!resetting && viewMode === ViewMode.List && <ListView />}
+      <AddTask
+        isOpen={isOpen}
+        onClose={onClose}
+        onTaskAdded={handleTaskAdded}
+      />
     </>
   );
 };

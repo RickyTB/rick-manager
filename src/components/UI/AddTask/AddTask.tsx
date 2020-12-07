@@ -16,18 +16,33 @@ import { Form, Formik } from "formik";
 import ContentInput from "./ContentInput";
 import SubjectSelect from "./SubjectSelect";
 import DueDatePicker from "./DueDatePicker";
+import db, { ITask } from "../../../db";
 
-const initialValues = {
+interface TaskFormValues {
+  content: string;
+  dueDate: Date;
+  subjectId: number;
+}
+
+const initialValues: TaskFormValues = {
   content: "",
   dueDate: new Date(),
   subjectId: 0,
 };
 
-export interface AddTaskProps extends Pick<ModalProps, "onClose" | "isOpen"> {}
+export interface AddTaskProps extends Pick<ModalProps, "onClose" | "isOpen"> {
+  onTaskAdded: (newTask: ITask) => void;
+}
 
-const AddTask: FC<AddTaskProps> = ({ onClose, isOpen }) => {
+const AddTask: FC<AddTaskProps> = ({ onClose, isOpen, onTaskAdded }) => {
   const initialRef = useRef<any>();
-  const handleSubmit = (values: any) => console.log(values);
+  const handleSubmit = async (values: TaskFormValues) => {
+    await db.transaction("rw", db.tasks, async () => {
+      const newTask = { ...values, createdAt: new Date() };
+      const id = await db.tasks.add(newTask);
+      onTaskAdded({ id, ...newTask });
+    });
+  };
   return (
     <Modal
       onClose={onClose}
