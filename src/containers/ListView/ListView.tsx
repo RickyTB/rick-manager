@@ -29,7 +29,15 @@ export default function ListView() {
         />
       </Box>
       <Box flex="5">
-        <TaskView task={selectedTask} />
+        <TaskView
+          task={selectedTask}
+          onUpdate={setSelectedTask}
+          onDelete={() =>
+            setSelectedSubject((subject) =>
+              subject ? { ...subject } : subject
+            )
+          }
+        />
       </Box>
     </Flex>
   );
