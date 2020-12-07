@@ -1,10 +1,17 @@
-import { Flex, Box, Text } from "@chakra-ui/react";
+import { Flex, Box } from "@chakra-ui/react";
 import SubjectList from "./SubjectList";
-import { useState } from "react";
-import { ISubject } from "../../db/models";
+import { useState, useEffect } from "react";
+import { ISubject, ITask } from "../../db";
+import TaskList from "./TaskList";
+import TaskView from "./TaskView";
 
 export default function ListView() {
   const [selectedSubject, setSelectedSubject] = useState<ISubject>();
+  const [selectedTask, setSelectedTask] = useState<ITask>();
+
+  useEffect(() => {
+    setSelectedTask(undefined);
+  }, [selectedSubject]);
 
   return (
     <Flex h="100vh" paddingTop="56px">
@@ -15,10 +22,14 @@ export default function ListView() {
         />
       </Box>
       <Box flex="2">
-        <Text>Box 2</Text>
+        <TaskList
+          subject={selectedSubject}
+          onSelect={setSelectedTask}
+          selectedTask={selectedTask}
+        />
       </Box>
       <Box flex="5">
-        <Text>Box 3</Text>
+        <TaskView task={selectedTask} />
       </Box>
     </Flex>
   );

@@ -5,13 +5,13 @@ import {
   Flex,
   Heading,
   IconButton,
-  useColorModeValue,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { Subject, AddSubject } from "../../../components/UI";
 import db, { ISubject } from "../../../db";
 import { useDB, TransactionState, useErrorEffect } from "../../../hooks";
+import { useHeaderPanel } from "../../../hooks/use-header-panel";
 
 interface SubjectListProps {
   selectedId?: number;
@@ -22,15 +22,21 @@ const SubjectList: FC<SubjectListProps> = ({ selectedId, onSelect }) => {
   const [subjects, setSubjects] = useState<ISubject[]>([]);
   const [reload, setReload] = useState(false);
   const { isOpen, onToggle, onClose } = useDisclosure();
-  const bg = useColorModeValue("primary.200", "primary.500");
-  const color = useColorModeValue("gray.800", "white");
+  const { bg, color } = useHeaderPanel();
   const toast = useToast();
   const [dbState, error] = useDB(
     async (db) => {
       const subjects = await db.subjects.orderBy("id").toArray();
+      for (const subject of subjects) {
+        subject.count = await db.tasks
+          .where("subjectId")
+          .equals(subject.id!)
+          .and((subject) => subject.dueDate > new Date() && !subject.finished)
+          .count();
+      }
       setSubjects(subjects);
     },
-    [db.subjects],
+    [db.subjects, db.tasks],
     [reload]
   );
   useErrorEffect(() => {

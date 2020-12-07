@@ -4,5 +4,5 @@ export interface ITask {
   dueDate: Date;
   createdAt: Date;
   subjectId: number;
-  finished?: boolean; 
+  finished: boolean;
 }

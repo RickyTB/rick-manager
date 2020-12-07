@@ -3,3 +3,4 @@ export { default as Subject } from "./Subject";
 export { default as AddSubject } from "./AddSubject";
 export { default as AddTask } from "./AddTask";
 export { default as TextareaPreview } from "./TextareaPreview";
+export { default as Task } from "./Task";

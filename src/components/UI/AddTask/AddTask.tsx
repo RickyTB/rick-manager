@@ -10,8 +10,7 @@ import {
   ModalProps,
   Stack,
 } from "@chakra-ui/react";
-import React, { FC } from "react";
-import { useRef } from "react";
+import React, { FC, useRef } from "react";
 import { Form, Formik } from "formik";
 import ContentInput from "./ContentInput";
 import SubjectSelect from "./SubjectSelect";
@@ -38,7 +37,7 @@ const AddTask: FC<AddTaskProps> = ({ onClose, isOpen, onTaskAdded }) => {
   const initialRef = useRef<any>();
   const handleSubmit = async (values: TaskFormValues) => {
     await db.transaction("rw", db.tasks, async () => {
-      const newTask = { ...values, createdAt: new Date() };
+      const newTask = { ...values, createdAt: new Date(), finished: false };
       const id = await db.tasks.add(newTask);
       onTaskAdded({ id, ...newTask });
     });
