@@ -4,6 +4,7 @@ import React from "react";
 import ReactMarkdown from "react-markdown";
 import es from "date-fns/locale/es";
 import { CheckIcon, MinusIcon, TimeIcon } from "@chakra-ui/icons";
+import { useItemColor } from "../../../hooks";
 
 export interface TaskProps {
   content: string;
@@ -13,14 +14,14 @@ export interface TaskProps {
   isActive: boolean;
 }
 
-const Task: React.FC<TaskProps> = ({
+export const Task: React.FC<TaskProps> = ({
   content,
   dueDate,
   finished,
   onClick,
   isActive,
 }) => {
-  const bg = !isActive ? "white" : "gray.100";
+  const [bg, hoverBg] = useItemColor(isActive);
   return (
     <Box
       py={3}
@@ -35,7 +36,7 @@ const Task: React.FC<TaskProps> = ({
       textAlign="left"
       whiteSpace="normal"
       _hover={{
-        bg: !isActive ? "gray.100" : "gray.200",
+        bg: hoverBg,
       }}
     >
       <Box maxH="8rem" overflow="hidden" mb={2}>
@@ -56,5 +57,3 @@ const Task: React.FC<TaskProps> = ({
     </Box>
   );
 };
-
-export default Task;

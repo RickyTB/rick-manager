@@ -1,7 +1,7 @@
-import { useState } from "react";
-import Toolbar from "../Navigation/Toolbar";
+import React, { useState } from "react";
+import { Toolbar } from "../Navigation";
 import CalendarView from "../../containers/CalendarView";
-import ListView from "../../containers/ListView";
+import { ListView } from "../../containers/ListView";
 import { ViewMode, VIEW_MODE_LS_KEY } from "../../util/constants";
 import { useUpdateEffect } from "../../hooks";
 import { AddTask } from "../UI";
@@ -10,7 +10,7 @@ import { useDisclosure } from "@chakra-ui/react";
 const loadViewMode = (): ViewMode =>
   (localStorage.getItem(VIEW_MODE_LS_KEY) as ViewMode) || ViewMode.List;
 
-const Layout = () => {
+export const Layout: React.FC = () => {
   const [viewMode, setViewMode] = useState<ViewMode>(loadViewMode);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [resetting, setResetting] = useState(false);
@@ -44,5 +44,3 @@ const Layout = () => {
     </>
   );
 };
-
-export default Layout;

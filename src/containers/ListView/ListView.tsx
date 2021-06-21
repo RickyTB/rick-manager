@@ -1,11 +1,13 @@
 import { Flex, Box } from "@chakra-ui/react";
-import SubjectList from "./SubjectList";
-import { useState, useEffect } from "react";
+import { SubjectList } from "./SubjectList";
+import React, { useState, useEffect } from "react";
 import { ISubject, ITask } from "../../db";
-import TaskList from "./TaskList";
-import TaskView from "./TaskView";
+import { TaskList } from "./TaskList";
+import { TaskView } from "./TaskView";
 
-export default function ListView() {
+export interface ListViewProps {}
+
+export const ListView: React.FC<ListViewProps> = () => {
   const [selectedSubject, setSelectedSubject] = useState<ISubject>();
   const [selectedTask, setSelectedTask] = useState<ITask>();
 
@@ -41,4 +43,4 @@ export default function ListView() {
       </Box>
     </Flex>
   );
-}
+};

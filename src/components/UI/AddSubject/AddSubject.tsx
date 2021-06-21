@@ -4,11 +4,11 @@ import { CirclePicker, ColorResult } from "react-color";
 import { useInput } from "../../../hooks";
 import { ISubject } from "../../../db/models";
 
-interface AddSubjectProps {
+export interface AddSubjectProps {
   onSubmit: (subject: ISubject) => void;
 }
 
-const AddSubject: FC<AddSubjectProps> = ({ onSubmit }) => {
+export const AddSubject: FC<AddSubjectProps> = ({ onSubmit }) => {
   const [name, setName] = useInput("");
   const [color, setColor] = useState<string>();
   const handleColorChange = useCallback(
@@ -17,7 +17,7 @@ const AddSubject: FC<AddSubjectProps> = ({ onSubmit }) => {
   );
   const handleSubmit = () => onSubmit({ name, color: color || "white" });
   return (
-    <Box bg="white" p={3} borderBottomWidth="1px">
+    <Box p={3} borderBottomWidth="1px">
       <FormControl id="form-name" isRequired mb={3}>
         <FormLabel>Nombre</FormLabel>
         <Input
@@ -41,5 +41,3 @@ const AddSubject: FC<AddSubjectProps> = ({ onSubmit }) => {
     </Box>
   );
 };
-
-export default AddSubject;

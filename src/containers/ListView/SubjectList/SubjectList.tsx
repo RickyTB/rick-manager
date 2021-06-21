@@ -13,12 +13,12 @@ import db, { ISubject } from "../../../db";
 import { useDB, TransactionState, useErrorEffect } from "../../../hooks";
 import { useHeaderPanel } from "../../../hooks/use-header-panel";
 
-interface SubjectListProps {
+export interface SubjectListProps {
   selectedId?: number;
   onSelect: (subject: ISubject) => void;
 }
 
-const SubjectList: FC<SubjectListProps> = ({ selectedId, onSelect }) => {
+export const SubjectList: FC<SubjectListProps> = ({ selectedId, onSelect }) => {
   const [subjects, setSubjects] = useState<ISubject[]>([]);
   const [reload, setReload] = useState(false);
   const { isOpen, onToggle, onClose } = useDisclosure();
@@ -94,7 +94,7 @@ const SubjectList: FC<SubjectListProps> = ({ selectedId, onSelect }) => {
         </Box>
       </Flex>
       {isOpen && <AddSubject onSubmit={handleAddSubject} />}
-      {subjects.map((subject, index) => (
+      {subjects.map((subject) => (
         <Subject
           name={subject.name}
           color={subject.color}
@@ -107,5 +107,3 @@ const SubjectList: FC<SubjectListProps> = ({ selectedId, onSelect }) => {
     </Box>
   );
 };
-
-export default SubjectList;

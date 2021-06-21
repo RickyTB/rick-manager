@@ -1,1 +1,1 @@
-export { default } from "./ExpandableTextarea";
+export * from "./ExpandableTextarea";

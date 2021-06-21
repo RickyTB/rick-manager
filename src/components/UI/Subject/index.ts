@@ -1,1 +1,1 @@
-export { default } from "./Subject";
+export * from "./Subject";

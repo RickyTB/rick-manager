@@ -1,7 +1,8 @@
 import { Badge, Box, Heading } from "@chakra-ui/react";
-import React, { FC } from "react";
+import React from "react";
+import { useItemColor } from "../../../hooks";
 
-interface SubjectProps {
+export interface SubjectProps {
   name: string;
   color: string;
   count?: number;
@@ -9,14 +10,14 @@ interface SubjectProps {
   onClick: () => void;
 }
 
-const Subject: FC<SubjectProps> = ({
+export const Subject: React.FC<SubjectProps> = ({
   name,
   color,
   count = 0,
   isActive = false,
   onClick,
 }) => {
-  const bg = !isActive ? "white" : "gray.100";
+  const [bg, hoverBg] = useItemColor(isActive);
   return (
     <Box
       py={3}
@@ -31,7 +32,7 @@ const Subject: FC<SubjectProps> = ({
       textAlign="left"
       whiteSpace="normal"
       _hover={{
-        bg: "gray.50",
+        bg: hoverBg,
       }}
     >
       <Heading fontSize="lg" px={2}>
@@ -52,5 +53,3 @@ const Subject: FC<SubjectProps> = ({
     </Box>
   );
 };
-
-export default Subject;

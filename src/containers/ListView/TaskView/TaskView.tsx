@@ -11,7 +11,7 @@ import {
 import db, { ITask } from "../../../db";
 import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
-import { chakraUIRenderer } from "../../../lib/chakra-markdown-renderer";
+import { chakraUIRenderer } from "../../../lib";
 import { format } from "date-fns";
 import es from "date-fns/locale/es";
 import { EditIcon } from "@chakra-ui/icons";
@@ -26,7 +26,11 @@ export interface TaskViewProps {
   onDelete: (id: number) => void;
 }
 
-const TaskView: React.FC<TaskViewProps> = ({ task, onUpdate, onDelete }) => {
+export const TaskView: React.FC<TaskViewProps> = ({
+  task,
+  onUpdate,
+  onDelete,
+}) => {
   const [isEdit, setIsEdit] = useState(false);
   const [updatedContent, setUpdatedContent] = useState("");
   const [updatedDate, setUpdatedDate] = useState<Date>();
@@ -87,7 +91,7 @@ const TaskView: React.FC<TaskViewProps> = ({ task, onUpdate, onDelete }) => {
         <ReactMarkdown
           plugins={[gfm]}
           children={task.content}
-          renderers={chakraUIRenderer}
+          components={chakraUIRenderer}
         />
       )}
       {isEdit ? (
@@ -126,5 +130,3 @@ const TaskView: React.FC<TaskViewProps> = ({ task, onUpdate, onDelete }) => {
     </Box>
   );
 };
-
-export default TaskView;

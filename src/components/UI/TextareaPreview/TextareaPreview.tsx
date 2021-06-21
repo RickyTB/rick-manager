@@ -2,8 +2,8 @@ import { Box, HStack } from "@chakra-ui/react";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
-import { chakraUIRenderer } from "../../../lib/chakra-markdown-renderer";
-import ExpandableTextarea from "../ExpandableTextarea";
+import { chakraUIRenderer } from "../../../lib";
+import { ExpandableTextarea } from "../ExpandableTextarea";
 
 export interface TextareaPreviewProps {
   value: string;
@@ -11,7 +11,7 @@ export interface TextareaPreviewProps {
   ref?: any;
 }
 
-const TextareaPreview: React.FC<TextareaPreviewProps> = React.forwardRef(
+export const TextareaPreview: React.FC<TextareaPreviewProps> = React.forwardRef(
   ({ value, onChange }, ref: any) => {
     return (
       <HStack spacing={4} align="top" mb={4}>
@@ -22,12 +22,10 @@ const TextareaPreview: React.FC<TextareaPreviewProps> = React.forwardRef(
           <ReactMarkdown
             plugins={[gfm]}
             children={value}
-            renderers={chakraUIRenderer}
+            components={chakraUIRenderer}
           />
         </Box>
       </HStack>
     );
   }
 );
-
-export default TextareaPreview;

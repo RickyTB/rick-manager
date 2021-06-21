@@ -14,13 +14,13 @@ import { BsCalendarFill, BsListTask } from "react-icons/bs";
 import ColorModeSwitcher from "../../UI/ColorModeSwitcher";
 import { ViewMode } from "../../../util/constants";
 
-interface ToolbarProps {
+export interface ToolbarProps {
   viewMode: ViewMode;
   onChangeViewMode: (mode: ViewMode) => void;
   onAddNote: () => void;
 }
 
-const Toolbar: FC<ToolbarProps> = ({
+export const Toolbar: FC<ToolbarProps> = ({
   viewMode,
   onChangeViewMode,
   onAddNote,
@@ -44,12 +44,14 @@ const Toolbar: FC<ToolbarProps> = ({
       <Box>
         <ButtonGroup isAttached variant="solid" colorScheme="accent">
           <IconButton
+            borderRadius="md"
             isActive={viewMode === ViewMode.Calendar}
             aria-label="Show calendar"
             icon={<Icon as={BsCalendarFill} />}
             onClick={() => onChangeViewMode(ViewMode.Calendar)}
           />
           <IconButton
+            borderRadius="md"
             isActive={viewMode === ViewMode.List}
             aria-label="Show list"
             icon={<Icon as={BsListTask} />}
@@ -69,5 +71,3 @@ const Toolbar: FC<ToolbarProps> = ({
     </Flex>
   );
 };
-
-export default Toolbar;

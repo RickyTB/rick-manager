@@ -1,1 +1,1 @@
-export {default} from "./TextareaPreview";
+export * from "./TextareaPreview";

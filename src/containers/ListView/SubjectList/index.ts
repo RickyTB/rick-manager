@@ -1,1 +1,1 @@
-export { default } from "./SubjectList";
+export * from "./SubjectList";

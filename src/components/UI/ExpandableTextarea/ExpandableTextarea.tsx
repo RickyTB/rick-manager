@@ -1,4 +1,4 @@
-import { Textarea } from "@chakra-ui/react";
+import { Textarea, useColorModeValue } from "@chakra-ui/react";
 import React, { ChangeEvent } from "react";
 
 export interface ExpandableTextareaProps {
@@ -9,8 +9,8 @@ export interface ExpandableTextareaProps {
 
 const MIN_HEIGHT = 16 * 10;
 
-const ExpandableTextarea: React.FC<ExpandableTextareaProps> = React.forwardRef(
-  ({ value, onChange }, ref: any) => {
+export const ExpandableTextarea: React.FC<ExpandableTextareaProps> =
+  React.forwardRef(({ value, onChange }, ref: any) => {
     const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) =>
       onChange(e.target.value);
     const handleInput = () => {
@@ -19,6 +19,7 @@ const ExpandableTextarea: React.FC<ExpandableTextareaProps> = React.forwardRef(
       ref.current.style.height =
         Math.max(ref.current.scrollHeight, MIN_HEIGHT) + 8 + "px";
     };
+    const bg = useColorModeValue("gray.50", "gray.900");
     return (
       <Textarea
         placeholder="Comienza a escribir"
@@ -29,11 +30,8 @@ const ExpandableTextarea: React.FC<ExpandableTextareaProps> = React.forwardRef(
         onChange={handleChange}
         value={value}
         fontFamily="monospace"
-        bgColor="gray.50"
+        bgColor={bg}
         onInput={handleInput}
       />
     );
-  }
-);
-
-export default ExpandableTextarea;
+  });

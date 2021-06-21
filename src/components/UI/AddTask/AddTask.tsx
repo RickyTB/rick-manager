@@ -10,9 +10,9 @@ import {
   ModalProps,
   Stack,
 } from "@chakra-ui/react";
-import React, { FC, useRef } from "react";
+import React, { useRef } from "react";
 import { Form, Formik } from "formik";
-import ContentInput from "./ContentInput";
+import { ContentInput } from "./ContentInput";
 import SubjectSelect from "./SubjectSelect";
 import DueDatePicker from "./DueDatePicker";
 import db, { ITask } from "../../../db";
@@ -33,7 +33,11 @@ export interface AddTaskProps extends Pick<ModalProps, "onClose" | "isOpen"> {
   onTaskAdded: (newTask: ITask) => void;
 }
 
-const AddTask: FC<AddTaskProps> = ({ onClose, isOpen, onTaskAdded }) => {
+export const AddTask: React.FC<AddTaskProps> = ({
+  onClose,
+  isOpen,
+  onTaskAdded,
+}) => {
   const initialRef = useRef<any>();
   const handleSubmit = async (values: TaskFormValues) => {
     await db.transaction("rw", db.tasks, async () => {
@@ -77,5 +81,3 @@ const AddTask: FC<AddTaskProps> = ({ onClose, isOpen, onTaskAdded }) => {
     </Modal>
   );
 };
-
-export default AddTask;

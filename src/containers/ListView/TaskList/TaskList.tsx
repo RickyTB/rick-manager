@@ -12,7 +12,7 @@ export interface TaskListProps {
   onSelect: (task: ITask) => void;
 }
 
-const TaskList: React.FC<TaskListProps> = ({
+export const TaskList: React.FC<TaskListProps> = ({
   subject,
   selectedTask,
   onSelect,
@@ -110,5 +110,3 @@ const TaskList: React.FC<TaskListProps> = ({
     </Box>
   );
 };
-
-export default TaskList;

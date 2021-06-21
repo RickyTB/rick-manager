@@ -1,87 +1,135 @@
 /*
-Taken from: https://github.com/mustaphaturhan/chakra-ui-markdown-renderer/blob/53b6d2c1ff68effa870888855910235ec4ec4611/src/index.js
+Taken from: https://github.com/mustaphaturhan/chakra-ui-markdown-renderer/blob/36eb69e3ddd989f16c80bc5e3d7a7548b4df80dc/src/index.tsx
 */
 
-import React, { ElementType } from "react";
+import * as React from "react";
 import {
   Text,
   Code,
   Divider,
   Link,
-  List,
   Checkbox,
   ListItem,
   Heading,
   Image,
+  OrderedList,
+  UnorderedList,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
 } from "@chakra-ui/react";
+import deepmerge from "deepmerge";
+import { Components } from "react-markdown/src/ast-to-react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism";
 
-function getCoreProps(props: any): any {
+type GetCoreProps = {
+  children?: React.ReactNode;
+  "data-sourcepos"?: any;
+};
+
+function getCoreProps(props: GetCoreProps): any {
   return props["data-sourcepos"]
     ? { "data-sourcepos": props["data-sourcepos"] }
     : {};
 }
 
-export const defaults: { [nodeType: string]: ElementType } = {
-  paragraph: (props) => {
+interface Defaults extends Components {
+  heading?: Components["h1"];
+}
+
+export const defaults: Defaults = {
+  p: (props) => {
     const { children } = props;
     return <Text mb={2}>{children}</Text>;
   },
-  emphasis: (props) => {
+  em: (props) => {
     const { children } = props;
     return <Text as="em">{children}</Text>;
   },
   blockquote: (props) => {
     const { children } = props;
-    return <Code p={2}>{children}</Code>;
+    return (
+      <Code as="blockquote" p={2}>
+        {children}
+      </Code>
+    );
   },
-  code: ({ language, value }) =>
-    value ? (
+  code: (props) => {
+    const { inline, children, className } = props;
+
+    if (inline) {
+      return <Code p={2} children={children} />;
+    }
+
+    const language = className?.replace("language-", "");
+    return (
       <SyntaxHighlighter style={tomorrow} language={language} showLineNumbers>
-        {value}
+        {children}
       </SyntaxHighlighter>
-    ) : null,
-  delete: (props) => {
+    );
+  },
+  del: (props) => {
     const { children } = props;
     return <Text as="del">{children}</Text>;
   },
-  thematicBreak: (props) => <Divider my={4} {...props}/>,
-  link: (props) => <Link {...props} color="primary.500" isExternal/>,
+  hr: (props) => {
+    return <Divider />;
+  },
+  a: Link,
   img: Image,
-  linkReference: Link,
-  imageReference: Image,
   text: (props) => {
     const { children } = props;
-    return (
-      <Text as="span" mb={4}>
-        {children}
-      </Text>
-    );
+    return <Text as="span">{children}</Text>;
   },
-  list: (props) => {
-    const { start, ordered, children, depth } = props;
+  ul: (props) => {
+    const { ordered, children, depth } = props;
     const attrs = getCoreProps(props);
-    if (start !== null && start !== 1 && start !== undefined) {
-      attrs.start = start.toString();
-    }
+    let Element = UnorderedList;
     let styleType = "disc";
-    if (ordered) styleType = "decimal";
+    if (ordered) {
+      Element = OrderedList;
+      styleType = "decimal";
+    }
     if (depth === 1) styleType = "circle";
     return (
-      <List
-        spacing={1}
+      <Element
+        spacing={2}
         as={ordered ? "ol" : "ul"}
         styleType={styleType}
         pl={4}
-        mb={4}
         {...attrs}
       >
         {children}
-      </List>
+      </Element>
     );
   },
-  listItem: (props) => {
+  ol: (props) => {
+    const { ordered, children, depth } = props;
+    const attrs = getCoreProps(props);
+    let Element = UnorderedList;
+    let styleType = "disc";
+    if (ordered) {
+      Element = OrderedList;
+      styleType = "decimal";
+    }
+    if (depth === 1) styleType = "circle";
+    return (
+      <Element
+        spacing={2}
+        as={ordered ? "ol" : "ul"}
+        styleType={styleType}
+        pl={4}
+        {...attrs}
+      >
+        {children}
+      </Element>
+    );
+  },
+  li: (props) => {
     const { children, checked } = props;
     let checkbox = null;
     if (checked !== null && checked !== undefined) {
@@ -100,46 +148,66 @@ export const defaults: { [nodeType: string]: ElementType } = {
       </ListItem>
     );
   },
-  definition: () => null,
   heading: (props) => {
     const { level, children } = props;
     const sizes = ["2xl", "xl", "lg", "md", "sm", "xs"];
     return (
       <Heading
-        mb={4}
-        as={`h${level}` as any}
-        size={sizes[`${level - 1}` as any] as any}
+        my={4}
+        as={`h${level}`}
+        size={sizes[`${level - 1}` as any]}
         {...getCoreProps(props)}
       >
         {children}
       </Heading>
     );
   },
-  inlineCode: (props) => {
+  pre: (props) => {
     const { children } = props;
     return <Code {...getCoreProps(props)}>{children}</Code>;
   },
+  table: Table,
+  thead: Thead,
+  tbody: Tbody,
+  tr: Tr,
+  td: Td,
+  th: Th,
 };
 
-function ChakraUIRenderer(theme = defaults) {
-  return {
-    paragraph: theme.paragraph,
-    emphasis: theme.emphasis,
-    blockquote: theme.blockquote,
-    code: theme.code,
-    delete: theme.delete,
-    thematicBreak: theme.thematicBreak,
-    link: theme.link,
-    img: theme.img,
-    linkReference: theme.linkReference,
-    imageReference: theme.imageReference,
-    text: theme.text,
-    list: theme.list,
-    listItem: theme.listItem,
-    definition: theme.definition,
-    heading: theme.heading,
-    inlineCode: theme.inlineCode,
+function ChakraUIRenderer(theme?: Defaults, merge = true): Components {
+  const elements = {
+    p: defaults.p,
+    em: defaults.em,
+    blockquote: defaults.blockquote,
+    code: defaults.code,
+    del: defaults.del,
+    hr: defaults.hr,
+    a: defaults.a,
+    img: defaults.img,
+    text: defaults.text,
+    ul: defaults.ul,
+    ol: defaults.ol,
+    li: defaults.li,
+    h1: defaults.heading,
+    h2: defaults.heading,
+    h3: defaults.heading,
+    h4: defaults.heading,
+    h5: defaults.heading,
+    h6: defaults.heading,
+    pre: defaults.pre,
+    table: defaults.table,
+    thead: defaults.thead,
+    tbody: defaults.tbody,
+    tr: defaults.tr,
+    td: defaults.td,
+    th: defaults.th,
   };
+
+  if (theme && merge) {
+    return deepmerge(elements, theme);
+  }
+
+  return elements;
 }
 
 export default ChakraUIRenderer;
